@@ -9,7 +9,7 @@ public class Settings {
     public static int stoppingTime = 1;
     public static int movingTime = 1;
     public static int elevatorsAmount = 5;
-    public static int floors = 100;
+    public static int floors = 20;
     public static double passengersCreatedAtTime = 0.05;
 
 }
