@@ -23,14 +23,16 @@ public class Elevator {
             elevatorsList.put(i, new Elevator(i));
         }
     }
-
     public static void setCentralControl(CentralControl centralControl) {
         Elevator.centralControl = centralControl;
         leavingStatics = new LeavingStatics(centralControl.getClock());
     }
-
     public static Elevator getElevator(int floorID) {
         return elevatorsList.get(floorID);
+    }
+
+    public static LeavingStatics getLeavingStatics() {
+        return leavingStatics;
     }
 
     private final int id;
@@ -84,6 +86,9 @@ public class Elevator {
 
     public void goToFloor(Floor destFloor) {
         this.destFloor = destFloor;
+    }
+    public int amountInside() {
+        return inside.values().stream().map(List::size).reduce(Integer::sum).orElse(0);
     }
 
     protected void waitingEnter() {

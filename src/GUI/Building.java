@@ -1,18 +1,15 @@
 package GUI;
 
+import Elevators.Elevator;
 import Main.Settings;
+import Passengers.Floor;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Building extends JPanel {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Building::createAndShowGui);
-    }
-
-    private static void createAndShowGui() {
-      Building building = new Building();
+    public static Building createAndShowGui(Building building) {
       JFrame frame = new JFrame("Building");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.getContentPane().add(building);
@@ -20,14 +17,14 @@ public class Building extends JPanel {
       frame.setLocationByPlatform(true);
       frame.setVisible(true);
       frame.setSize(100 * (Settings.elevatorsAmount + 1),40 * (Settings.floors));
+      return building;
     }
 
 
-    private static final float FIELD_PTS = 32f;
+    private static final float FIELD_PTS = 15f;
     private static final int GAP = 3;
     private static final Color BG = Color.BLACK;
-    private static final Color SOLVED_BG = Color.LIGHT_GRAY;
-    public static final int TIMER_DELAY = 2 * 1000;
+    private Cell[] leavesGrid;
     private Cell[][] elevatorsGrid;
     private Cell[] floorsGrid;
 
@@ -35,6 +32,14 @@ public class Building extends JPanel {
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP));
         mainPanel.setBackground(BG);
+
+        JPanel leavesPanel = new JPanel(new GridLayout(Settings.floors, 1));
+        leavesGrid = new Cell[Settings.floors];
+        for (int row = 0; row < leavesGrid.length; row++) {
+            leavesPanel.add(leavesGrid[row] = createField());
+            leavesGrid[row].setBackground(Color.gray);
+        }
+        mainPanel.add(leavesPanel);
 
         JPanel elevatorsPanel = new JPanel(new GridLayout(Settings.floors, Settings.elevatorsAmount));
         elevatorsGrid = new Cell[Settings.floors][Settings.elevatorsAmount];
@@ -60,8 +65,28 @@ public class Building extends JPanel {
         Cell field = new Cell();
         field.setHorizontalAlignment(JTextField.CENTER);
         field.setFont(field.getFont().deriveFont(Font.BOLD, FIELD_PTS));
-
         return field;
     }
 
+    public void update() {
+        int floorsAmount = Settings.floors;
+        for (int i = 0; i < floorsAmount; ++i) {
+            int personsAtFloor = Floor.getFloor(i).amountPassengers();
+            floorsGrid[floorsAmount - i - 1].setNum(personsAtFloor);
+        }
+
+        for (int i = 0; i < Settings.elevatorsAmount; ++i) {
+            Elevator elevator = Elevator.getElevator(i);
+            int personsAtFloor = elevator.amountInside();
+            int currentFloor = elevator.getCurrentFloor().getId();
+            for (int j = 0; j < floorsAmount; ++j)
+                elevatorsGrid[floorsAmount - 1 - j][i].removeElevator();
+            elevatorsGrid[floorsAmount - 1 - currentFloor][i].setElevator(personsAtFloor);
+        }
+
+        for (int i = 0; i < floorsAmount; ++i) {
+            int leavingAtFloor = Elevator.getLeavingStatics().getLeavingStatics(Floor.getFloor(i));
+            leavesGrid[floorsAmount - i - 1].setNum(leavingAtFloor);
+        }
+    }
 }

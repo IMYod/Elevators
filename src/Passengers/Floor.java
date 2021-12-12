@@ -36,6 +36,9 @@ public class Floor {
     public Collection<Passenger> passengersAt(Elevator elevator) {
         return waitingToElevator.get(elevator.getId());
     }
+    public int amountPassengers() {
+        return waitingToElevator.values().stream().map(List::size).reduce(Integer::sum).orElse(0);
+    }
 
     public void put(Elevator elevator, Passenger passenger) {
         waitingToElevator.get(elevator.getId()).add(passenger);

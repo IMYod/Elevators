@@ -1,7 +1,7 @@
 package GUI;
 
 import javax.swing.*;
-import java.util.Random;
+import java.awt.*;
 
 public class Cell extends JTextField {
     private int num;
@@ -24,4 +24,15 @@ public class Cell extends JTextField {
         if (num == 0) return "";
         return Integer.toString(getNum());
     }
+
+    public void setElevator(int _num) {
+        setBackground(Color.ORANGE);
+        setNum(_num);
+    }
+    public void removeElevator() {
+        setBackground(Color.WHITE);
+        setNum(0);
+    }
+
+
 }

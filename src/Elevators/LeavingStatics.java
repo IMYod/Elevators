@@ -1,17 +1,30 @@
 package Elevators;
 
+import Main.Settings;
+import Passengers.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 public class LeavingStatics {
     int countLeaving;
     long totalJourneyTime;
     Clock clock;
+    HashMap<Floor, Integer> leavingPerFloor;
+
+    public int getLeavingStatics(Floor floor) {
+        return leavingPerFloor.get(floor);
+    }
+
 
     public LeavingStatics(Clock clock) {
         this.clock = clock;
+        leavingPerFloor = new HashMap<>();
+        for (int i = 0; i< Settings.floors; ++i) {
+            leavingPerFloor.put(Floor.getFloor(i), 0);
+        }
     }
 
     public void Leave(Collection<Passenger> passengers) {
@@ -27,14 +40,17 @@ public class LeavingStatics {
     }
 
     protected void Leave(Passenger passenger) {
-        ++countLeaving;
         totalJourneyTime += clock.currentTime() - passenger.getCreationTime();
+        ++countLeaving;
+        Floor destFloor = passenger.getDestFloor();
+        synchronized (leavingPerFloor) {
+            leavingPerFloor.put(destFloor, leavingPerFloor.get(destFloor) + 1);
+        }
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Leaving: ");
+        StringBuilder sb = new StringBuilder("Leaving: ");
         sb.append(countLeaving);
         sb.append("\nAverage time: ");
         sb.append((double) totalJourneyTime / countLeaving);

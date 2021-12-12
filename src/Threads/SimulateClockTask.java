@@ -1,6 +1,7 @@
 package Threads;
 
 import Elevators.Elevator;
+import GUI.Building;
 import Main.Settings;
 
 import java.util.Collection;
@@ -10,7 +11,16 @@ import java.util.TimerTask;
 
 public class SimulateClockTask extends TimerTask {
 
+    public SimulateClockTask() {
+        super();
+    }
+
+    public SimulateClockTask(Building gui) {
+        this.gui = gui;
+    }
+
     List<Elevator> elevators;
+    Building gui;
     private final long sleepingTimeMS = 1000L;
     private int counter = 0;
 
@@ -19,6 +29,8 @@ public class SimulateClockTask extends TimerTask {
         System.out.println("sec: " + counter);
         counter++;
         Elevator.getElevators().forEach(Elevator::doStep);
+        if (gui != null)
+            gui.update();
     }
 
     public int getCounter() {

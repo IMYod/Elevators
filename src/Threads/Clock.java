@@ -1,6 +1,7 @@
 package Threads;
 
 import Elevators.Elevator;
+import GUI.Building;
 import Main.Settings;
 
 import java.util.Collection;
@@ -10,10 +11,16 @@ import java.util.Timer;
 public class Clock {
     private Timer timer;
     private SimulateClockTask clockTask;
+    public Building gui;
 
     public Clock() {
         timer = new Timer();
-        clockTask = new SimulateClockTask();
+        clockTask = new SimulateClockTask(gui);
+    }
+
+    public Clock(Building gui) {
+        timer = new Timer();
+        clockTask = new SimulateClockTask(gui);
     }
 
     public void play() {
