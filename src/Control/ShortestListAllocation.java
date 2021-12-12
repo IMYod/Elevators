@@ -2,6 +2,7 @@ package Control;
 
 import Elevators.Elevator;
 import Main.Settings;
+import Passengers.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
 

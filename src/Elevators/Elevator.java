@@ -122,4 +122,17 @@ public class Elevator {
                 ", stoppingTime=" + stoppingTime +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Elevator elevator = (Elevator) o;
+        return id == elevator.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
