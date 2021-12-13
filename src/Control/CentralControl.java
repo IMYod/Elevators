@@ -1,7 +1,8 @@
 package Control;
 
 import Elevators.Elevator;
-import Passengers.Floor;
+import Floors.Floor;
+import Floors.FloorsPath;
 import Passengers.Passenger;
 import Threads.Clock;
 
@@ -15,24 +16,27 @@ public abstract class CentralControl implements Runnable {
         this.createdPersons = createdPersons;
         this.clock = clock;
 
-        floorsPath = new HashMap<>();
-        for (Elevator elevator : Elevator.getElevators()) {
-            floorsPath.put(elevator, new LinkedList<>());
-        }
+        floorsPath = new FloorsPath();
     }
 
     UpdatePath updatePath;
-    HashMap<Elevator, LinkedList<Floor>> floorsPath;
+    FloorsPath floorsPath;
     protected BlockingQueue<Passenger> createdPersons;
     protected Clock clock;
 
     protected abstract Elevator chooseElevator(Passenger person);
+
     public void addToStopList(Elevator elevator, Floor floor) {
-        updatePath.addToStopList(floorsPath, elevator, floor);
+        synchronized (floorsPath.getLock(elevator)) {
+            updatePath.addToStopList(floorsPath.getFloorsPath(elevator), elevator, floor);
+        }
     }
     public void elevatorStopped(Elevator elevator, Floor floor) {
-        floorsPath.get(elevator).pollFirst();
-        elevator.goToFloor(floorsPath.get(elevator).peekFirst());
+        synchronized (floorsPath.getLock(elevator)) {
+            LinkedList<Floor> elevatorPath = floorsPath.getFloorsPath(elevator);
+            elevatorPath.pollFirst();
+            elevator.goToFloor(elevatorPath.peekFirst());
+        }
     }
 
     @Override

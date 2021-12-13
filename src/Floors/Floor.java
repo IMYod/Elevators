@@ -1,14 +1,23 @@
-package Passengers;
+package Floors;
 
 import Elevators.Elevator;
 import Main.Settings;
+import Passengers.Passenger;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class Floor {
+
+    /*
+    static elements
+     */
+
+    //Getting floor by id
     public static HashMap<Integer, Floor> floorsList;
 
+    //Allocate all the according the settings
     public static void init() {
         floorsList = new HashMap<>();
         for (int i=0; i< Settings.floors; ++i) {
@@ -22,24 +31,31 @@ public class Floor {
         return floorsList.get(floorID);
     }
 
+    /*
+    Object elements
+     */
+
     int id;
-    HashMap<Integer, List<Passenger>> waitingToElevator;
+    //partition of the passengers in the floors, by id of elevator
+    HashMap<Integer, BlockingQueue<Passenger>> waitingToElevator;
 
     private Floor(int id) {
         this.id = id;
         waitingToElevator = new HashMap<>();
-        for (int i=0; i<Settings.elevatorsAmount; ++i) {
-            waitingToElevator.put(i, new LinkedList<>());
+        for (int i = 0; i<Settings.elevators; ++i) {
+            waitingToElevator.put(i, new ArrayBlockingQueue<>(Settings.capacity));
         }
     }
 
-    public Collection<Passenger> passengersAt(Elevator elevator) {
+    public BlockingQueue<Passenger> passengersAt(Elevator elevator) {
         return waitingToElevator.get(elevator.getId());
     }
+    //The total number of people waiting on the floor
     public int amountPassengers() {
-        return waitingToElevator.values().stream().map(List::size).reduce(Integer::sum).orElse(0);
+        return waitingToElevator.values().stream().map(BlockingQueue::size).reduce(Integer::sum).orElse(0);
     }
 
+    //Adding a passenger for waiting for some elevator
     public void put(Elevator elevator, Passenger passenger) {
         waitingToElevator.get(elevator.getId()).add(passenger);
     }

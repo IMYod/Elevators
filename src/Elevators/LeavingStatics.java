@@ -1,7 +1,7 @@
 package Elevators;
 
 import Main.Settings;
-import Passengers.Floor;
+import Floors.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
 
@@ -13,6 +13,7 @@ public class LeavingStatics {
     long totalJourneyTime;
     Clock clock;
     HashMap<Floor, Integer> leavingPerFloor;
+    private Object[] lock;
 
     public int getLeavingStatics(Floor floor) {
         return leavingPerFloor.get(floor);
@@ -22,8 +23,10 @@ public class LeavingStatics {
     public LeavingStatics(Clock clock) {
         this.clock = clock;
         leavingPerFloor = new HashMap<>();
+        lock = new Object[Settings.floors];
         for (int i = 0; i< Settings.floors; ++i) {
             leavingPerFloor.put(Floor.getFloor(i), 0);
+            lock[i] = new Object();
         }
     }
 
@@ -42,9 +45,12 @@ public class LeavingStatics {
     protected void Leave(Passenger passenger) {
         totalJourneyTime += clock.currentTime() - passenger.getCreationTime();
         ++countLeaving;
-        Floor destFloor = passenger.getDestFloor();
-        synchronized (leavingPerFloor) {
-            leavingPerFloor.put(destFloor, leavingPerFloor.get(destFloor) + 1);
+        increment(passenger.getDestFloor());
+    }
+
+    private void increment(Floor floor) {
+        synchronized (lock[floor.getId()]) {
+            leavingPerFloor.put(floor, leavingPerFloor.get(floor) + 1);
         }
     }
 

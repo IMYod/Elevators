@@ -1,7 +1,7 @@
 package Control;
 
 import Elevators.Elevator;
-import Passengers.Floor;
+import Floors.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
 
@@ -18,7 +18,7 @@ public class ClosestAllocation extends CentralControl {
 
     @Override
     protected Elevator chooseElevator(Passenger person) {
-        ElevatorWeight elvatorDistance = (Elevator e) -> {
+        ElevatorWeight elevatorDistance = (Elevator e) -> {
             Floor eFloor = e.getDestFloor();
             if (eFloor == null)
                 eFloor = e.getCurrentFloor();
@@ -34,7 +34,7 @@ public class ClosestAllocation extends CentralControl {
         }
 
         return elevatorsCollection.stream()
-                .min(Comparator.comparingInt(elvatorDistance::getWeight)).orElse(null);
+                .min(Comparator.comparingInt(elevatorDistance::getWeight)).orElse(null);
     }
 
 }

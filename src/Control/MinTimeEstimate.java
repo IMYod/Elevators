@@ -2,19 +2,18 @@ package Control;
 
 import Elevators.Elevator;
 import Main.Settings;
-import Passengers.Floor;
+import Floors.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
-import java.util.stream.Stream;
 
 public class MinTimeEstimate extends CentralControl {
 
     public MinTimeEstimate(BlockingQueue<Passenger> createdPersons, Clock clock) {
         super(createdPersons, clock);
-        updatePath = new CloseToDest();
+        updatePath = new AddByTheWay();
     }
 
     @Override
@@ -27,10 +26,8 @@ public class MinTimeEstimate extends CentralControl {
 
     private int estimateElevator(Elevator e, Passenger person) {
         Set<Floor> possibleFloors;
-        synchronized (floorsPath) {
-            possibleFloors = new HashSet<>(floorsPath.get(e));
-        }
-        synchronized (possibleFloors) {
+        synchronized (floorsPath.getLock(e)) {
+            possibleFloors = new HashSet<>(floorsPath.getFloorsPath(e));
             possibleFloors.add(e.getCurrentFloor());
             possibleFloors.add(person.getSourceFloor());
             possibleFloors.add(person.getDestFloor());

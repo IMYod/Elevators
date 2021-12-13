@@ -2,7 +2,7 @@ package GUI;
 
 import Elevators.Elevator;
 import Main.Settings;
-import Passengers.Floor;
+import Floors.Floor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class Building extends JPanel {
       frame.pack();
       frame.setLocationByPlatform(true);
       frame.setVisible(true);
-      frame.setSize(100 * (Settings.elevatorsAmount + 1),40 * (Settings.floors));
+      frame.setSize(100 * (Settings.elevators + 1),40 * (Settings.floors));
       return building;
     }
 
@@ -41,8 +41,8 @@ public class Building extends JPanel {
         }
         mainPanel.add(leavesPanel);
 
-        JPanel elevatorsPanel = new JPanel(new GridLayout(Settings.floors, Settings.elevatorsAmount));
-        elevatorsGrid = new Cell[Settings.floors][Settings.elevatorsAmount];
+        JPanel elevatorsPanel = new JPanel(new GridLayout(Settings.floors, Settings.elevators));
+        elevatorsGrid = new Cell[Settings.floors][Settings.elevators];
         for (int row = 0; row < elevatorsGrid.length; row++) {
             for (int col = 0; col < elevatorsGrid[row].length; col++) {
                 elevatorsPanel.add(elevatorsGrid[row][col] = createField());
@@ -75,7 +75,7 @@ public class Building extends JPanel {
             floorsGrid[floorsAmount - i - 1].setNum(personsAtFloor);
         }
 
-        for (int i = 0; i < Settings.elevatorsAmount; ++i) {
+        for (int i = 0; i < Settings.elevators; ++i) {
             Elevator elevator = Elevator.getElevator(i);
             int personsAtFloor = elevator.amountInside();
             int currentFloor = elevator.getCurrentFloor().getId();

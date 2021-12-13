@@ -2,10 +2,11 @@ package Elevators;
 
 import Control.CentralControl;
 import Main.Settings;
-import Passengers.Floor;
+import Floors.Floor;
 import Passengers.Passenger;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 
 public class Elevator {
 
@@ -19,7 +20,7 @@ public class Elevator {
 
     public static void init() {
         elevatorsList = new HashMap<>();
-        for (int i=0; i< Settings.elevatorsAmount; ++i) {
+        for (int i = 0; i< Settings.elevators; ++i) {
             elevatorsList.put(i, new Elevator(i));
         }
     }
@@ -38,6 +39,7 @@ public class Elevator {
     private final int id;
     private Floor atFloor, destFloor;
     private HashMap<Integer, List<Passenger>> inside; //mapping passengers by destination floor
+    private Object lock;
     int stoppingTime;
 
     private Elevator(int id) {
@@ -47,6 +49,7 @@ public class Elevator {
             inside.put(i, new LinkedList<>());
         }
         atFloor = Floor.getFloor(0);
+        lock = new Object();
     }
 
     public Floor getCurrentFloor() {
@@ -92,10 +95,17 @@ public class Elevator {
     }
 
     protected void waitingEnter() {
-        Collection<Passenger> waiting = atFloor.passengersAt(this);
-        waiting.forEach(this::enterPassenger);
-        waiting.clear();
+        BlockingQueue<Passenger> waiting = atFloor.passengersAt(this);
+        try {
+            while (waiting.size() > 0) {
+                Passenger passenger = waiting.take();
+                enterPassenger(passenger);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+    
     protected void enterPassenger(Passenger p) {
         inside.get(p.getDestFloor().getId()).add(p);
         centralControl.addToStopList(this, p.getDestFloor());

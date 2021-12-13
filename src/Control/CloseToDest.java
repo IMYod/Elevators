@@ -1,7 +1,7 @@
 package Control;
 
 import Elevators.Elevator;
-import Passengers.Floor;
+import Floors.Floor;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,36 +10,32 @@ import java.util.ListIterator;
 
 public class CloseToDest implements UpdatePath {
     @Override
-    public void addToStopList(HashMap<Elevator, LinkedList<Floor>> floorsPath, Elevator elevator, Floor floor) {
-        List<Floor> currentFloorPath = floorsPath.get(elevator);
-
-        synchronized (currentFloorPath) {
-            ListIterator<Floor> iterator = currentFloorPath.listIterator();
-            Floor current = elevator.getCurrentFloor();
-            if (floor.equals(current)) {
-                currentFloorPath.listIterator().add(current);
-                elevator.goToFloor(floor);
+    public void addToStopList(LinkedList<Floor> currentFloorPath, Elevator elevator, Floor floor) {
+        ListIterator<Floor> iterator = currentFloorPath.listIterator();
+        Floor current = elevator.getCurrentFloor();
+        if (floor.equals(current)) {
+            currentFloorPath.listIterator().add(current);
+            elevator.goToFloor(floor);
+            return;
+        }
+        while (iterator.hasNext()) {
+            Floor next = iterator.next();
+            if (floor.between(current, next) || closestToFirst(current, floor, next)) {
+                iterator.previous();
+                if (!iterator.hasPrevious()) {
+                    elevator.goToFloor(floor);
+                }
+                iterator.add(floor);
+                return;
+            } else if (floor.equals(next)) {
                 return;
             }
-            while (iterator.hasNext()) {
-                Floor next = iterator.next();
-                if (floor.between(current, next) || closestToFirst(current, floor, next)) {
-                    iterator.previous();
-                    if (!iterator.hasPrevious()) {
-                        elevator.goToFloor(floor);
-                    }
-                    iterator.add(floor);
-                    return;
-                } else if (floor.equals(next)) {
-                    return;
-                }
-                current = next;
-            }
-            if (currentFloorPath.isEmpty()) {
-                elevator.goToFloor(floor);
-            }
-            currentFloorPath.add(floor);
+            current = next;
         }
+        if (currentFloorPath.isEmpty()) {
+            elevator.goToFloor(floor);
+        }
+        currentFloorPath.add(floor);
     }
 
     private boolean closestToFirst(Floor floor, Floor a, Floor b) {

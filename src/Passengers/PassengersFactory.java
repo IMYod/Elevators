@@ -1,5 +1,6 @@
 package Passengers;
 
+import Floors.Floor;
 import Main.Settings;
 import Threads.Clock;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PassengersFactory implements Runnable {
-
+    //A collection of people created and waiting for the elevator
     private BlockingQueue<Passenger> createdPersons;
     private Clock clock;
 
@@ -19,6 +20,7 @@ public class PassengersFactory implements Runnable {
         this.clock = clock;
     }
 
+    //Create a random passenger
     protected Passenger createOnePassenger() {
         Floor source = Floor.getFloor(ThreadLocalRandom.current().nextInt(Settings.floors));
         int destNum = ThreadLocalRandom.current().nextInt(1, Settings.floors);
@@ -28,6 +30,7 @@ public class PassengersFactory implements Runnable {
         return p;
     }
 
+    //Passenger creation series, according to the settings file
     @Override
     public void run() {
         Timer timer = new Timer();

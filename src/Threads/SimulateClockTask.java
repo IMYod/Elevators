@@ -11,19 +11,18 @@ import java.util.TimerTask;
 
 public class SimulateClockTask extends TimerTask {
 
+    //constructors
     public SimulateClockTask() {
         super();
     }
-
     public SimulateClockTask(Building gui) {
         this.gui = gui;
     }
 
-    List<Elevator> elevators;
     Building gui;
-    private final long sleepingTimeMS = 1000L;
     private int counter = 0;
 
+    //The series of operations in each unit of time
     @Override
     public void run() {
         System.out.println("sec: " + counter);

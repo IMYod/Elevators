@@ -1,16 +1,16 @@
 package Passengers;
 
-import Elevators.Elevator;
+import Floors.Floor;
 
 public class Passenger {
     static int counter = 0;
 
     int id;
     int creationTime;
+    // The floor on which it was created
     Floor sourceFloor;
+    // The floor to be taken to
     Floor destFloor;
-
-    Elevator atElevator;
 
     public Passenger(int creationTime, Floor sourceFloor, Floor goToFloor) {
         this.id = counter++;

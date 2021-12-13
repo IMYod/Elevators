@@ -3,15 +3,12 @@ package Main;
 import Control.*;
 import Elevators.Elevator;
 import GUI.Building;
-import Passengers.Floor;
+import Floors.Floor;
 import Passengers.Passenger;
 import Passengers.PassengersFactory;
 import Threads.Clock;
 
 import javax.swing.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -25,7 +22,7 @@ public class Main {
 
         Floor.init();
         Elevator.init();
-        BlockingQueue<Passenger> personBlockingQueue = new ArrayBlockingQueue<>(1000);
+        BlockingQueue<Passenger> personBlockingQueue = new ArrayBlockingQueue<>(Settings.capacity);
         CentralControl control = new MinTimeEstimate(personBlockingQueue, clock);
         Elevator.setCentralControl(control);
         PassengersFactory passengersFactory = new PassengersFactory(personBlockingQueue, clock);
