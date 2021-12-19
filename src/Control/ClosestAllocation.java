@@ -16,6 +16,8 @@ public class ClosestAllocation extends CentralControl {
         updatePath = new CloseToDest();
     }
 
+    //Add a passenger to at floor f,
+    //to the elevator with next stopping floor, closest to fS
     @Override
     protected Elevator chooseElevator(Passenger person) {
         ElevatorWeight elevatorDistance = (Elevator e) -> {

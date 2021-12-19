@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
+//Cell in building GUI
 public class Cell extends JTextField {
     private int num;
 

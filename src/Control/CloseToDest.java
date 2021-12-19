@@ -2,12 +2,13 @@ package Control;
 
 import Elevators.Elevator;
 import Floors.Floor;
-
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 
+/*
+Excluding the conditions of "Add By The Way" class,
+Add the floor if the next stop floor in the list moves away from the new floor
+ */
 public class CloseToDest implements UpdatePath {
     @Override
     public void addToStopList(LinkedList<Floor> currentFloorPath, Elevator elevator, Floor floor) {

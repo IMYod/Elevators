@@ -4,6 +4,7 @@ import Elevators.Elevator;
 
 import java.util.*;
 
+//For each elevator, stores the planned floors path
 public class FloorsPath {
     private HashMap<Elevator, LinkedList<Floor>> floorsPath;
     private HashMap<Elevator, Object> locks;
@@ -17,6 +18,7 @@ public class FloorsPath {
         }
     }
 
+    //Lock object, for safe multi trade process
     public Object getLock(Elevator elevator) {
         return locks.get(elevator);
     }

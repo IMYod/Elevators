@@ -7,6 +7,7 @@ import Threads.Clock;
 import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
 
+//Choose an elevator with the smallest number of stops in the path
 public class ShortestListAllocation extends CentralControl {
     public ShortestListAllocation(BlockingQueue<Passenger> createdPersons, Clock clock) {
         super(createdPersons, clock);

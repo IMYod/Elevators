@@ -4,10 +4,13 @@ import Main.Settings;
 import Floors.Floor;
 import Passengers.Passenger;
 import Threads.Clock;
-
 import java.util.Collection;
 import java.util.HashMap;
 
+/*
+Information on passengers, by the leaving floor.
+This class can be extended for more complex analysis.
+ */
 public class LeavingStatics {
     int countLeaving;
     long totalJourneyTime;
@@ -18,7 +21,6 @@ public class LeavingStatics {
     public int getLeavingStatics(Floor floor) {
         return leavingPerFloor.get(floor);
     }
-
 
     public LeavingStatics(Clock clock) {
         this.clock = clock;

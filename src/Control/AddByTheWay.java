@@ -2,12 +2,14 @@ package Control;
 
 import Elevators.Elevator;
 import Floors.Floor;
-
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 
+
+/*
+If the floor is "by the way" between two consequent stopping floors - add between them
+Otherwise, add to the end of the list
+ */
 public class AddByTheWay implements UpdatePath {
     @Override
     public void addToStopList(LinkedList<Floor> currentFloorPath, Elevator elevator, Floor floor) {

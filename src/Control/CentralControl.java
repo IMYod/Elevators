@@ -5,11 +5,14 @@ import Floors.Floor;
 import Floors.FloorsPath;
 import Passengers.Passenger;
 import Threads.Clock;
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 
+/*
+Gets the new passengers
+Diffuser between elevators
+Updated on departing passengers
+ */
 public abstract class CentralControl implements Runnable {
 
     protected CentralControl(BlockingQueue<Passenger> createdPersons, Clock clock) {
@@ -24,13 +27,17 @@ public abstract class CentralControl implements Runnable {
     protected BlockingQueue<Passenger> createdPersons;
     protected Clock clock;
 
+    //An algorithm that determines the elevator for this passenger
     protected abstract Elevator chooseElevator(Passenger person);
 
+    //Adding a passenger to an elevator
     public void addToStopList(Elevator elevator, Floor floor) {
         synchronized (floorsPath.getLock(elevator)) {
             updatePath.addToStopList(floorsPath.getFloorsPath(elevator), elevator, floor);
         }
     }
+
+    //Removing a passenger who left an elevator
     public void elevatorStopped(Elevator elevator, Floor floor) {
         synchronized (floorsPath.getLock(elevator)) {
             LinkedList<Floor> elevatorPath = floorsPath.getFloorsPath(elevator);

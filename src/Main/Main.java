@@ -22,7 +22,10 @@ public class Main {
 
         Floor.init();
         Elevator.init();
+
+        //Move created passengers, from the factory to the central control
         BlockingQueue<Passenger> personBlockingQueue = new ArrayBlockingQueue<>(Settings.capacity);
+        //Here one can choose type of central contrl
         CentralControl control = new MinTimeEstimate(personBlockingQueue, clock);
         Elevator.setCentralControl(control);
         PassengersFactory passengersFactory = new PassengersFactory(personBlockingQueue, clock);

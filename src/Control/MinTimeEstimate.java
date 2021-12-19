@@ -9,6 +9,10 @@ import Threads.Clock;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 
+/*
+An estimate of the route time of the elevator, if this passenger will be added to it.
+Choose the minimum between them.
+ */
 public class MinTimeEstimate extends CentralControl {
 
     public MinTimeEstimate(BlockingQueue<Passenger> createdPersons, Clock clock) {
@@ -23,7 +27,11 @@ public class MinTimeEstimate extends CentralControl {
                 .orElse(null);
     }
 
-
+/*
+The estimate takes into account the number of floors in the path, and the number of stops.
+The estimated time required for both.
+For simplicity, there is no consideration of the order of the floors within the path.
+ */
     private int estimateElevator(Elevator e, Passenger person) {
         Set<Floor> possibleFloors;
         synchronized (floorsPath.getLock(e)) {

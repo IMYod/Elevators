@@ -7,6 +7,15 @@ import Floors.Floor;
 import javax.swing.*;
 import java.awt.*;
 
+/*Display as following:
+    Rows: Floors in the building
+    Left column: Passengers who reached their floor
+    Right column: Passengers that waiting to a elevator
+    Intermediate columns: A series of elevators
+        the floor on which it is located
+        the number of passengers in the elevator
+*/
+
 public class Building extends JPanel {
 
     public static Building createAndShowGui(Building building) {
@@ -20,12 +29,14 @@ public class Building extends JPanel {
       return building;
     }
 
-
     private static final float FIELD_PTS = 15f;
     private static final int GAP = 3;
     private static final Color BG = Color.BLACK;
+    //Left column
     private Cell[] leavesGrid;
+    //Intermediate columns
     private Cell[][] elevatorsGrid;
+    //Right column
     private Cell[] floorsGrid;
 
     public Building() {
@@ -68,6 +79,7 @@ public class Building extends JPanel {
         return field;
     }
 
+    //Retrieving the updated values
     public void update() {
         int floorsAmount = Settings.floors;
         for (int i = 0; i < floorsAmount; ++i) {
